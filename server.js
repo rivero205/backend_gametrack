@@ -29,12 +29,43 @@ const app = express();
 
 // Middleware
 // Habilitar CORS con credenciales para soportar cookies httpOnly cuando sea necesario.
-// Si quieres restringir el origen, define CLIENT_ORIGIN en el .env (por ejemplo: http://localhost:5173)
-const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || true,
-  credentials: true,
-};
-app.use(cors(corsOptions));
+// `CLIENT_ORIGIN` puede ser:
+// - una URL única
+// - varias URLs separadas por coma: "https://site1,https://site2,http://localhost:5173"
+// - la palabra especial `ALLOW_ALL` para permitir todos los orígenes (útil en desarrollo)
+// - vacío/ausente -> sin restricción (equivalente a permitir todos)
+const rawClientOrigin = process.env.CLIENT_ORIGIN || '';
+let corsOptions;
+if (rawClientOrigin === 'ALLOW_ALL' || rawClientOrigin.trim() === '') {
+  // Permitir todos los orígenes (reflect origin = true)
+  corsOptions = { origin: true, credentials: true };
+  console.log('CORS: allowing all origins (CLIENT_ORIGIN=%s)', rawClientOrigin || '<empty>');
+} else {
+  const allowed = rawClientOrigin.split(',').map((s) => s.trim()).filter(Boolean);
+  corsOptions = {
+    origin: function (origin, callback) {
+      // Permitir peticiones sin origin (p. ej. curl o servidores)
+      if (!origin) return callback(null, true);
+      // Si la lista está vacía permitimos todo
+      if (allowed.length === 0) return callback(null, true);
+      if (allowed.includes(origin)) return callback(null, true);
+      // No permitido
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  };
+  console.log('CORS: allowed origins ->', allowed);
+}
+app.use((req, res, next) => {
+  // wrap cors so errors emit a proper 403 instead of crashing
+  cors(corsOptions)(req, res, (err) => {
+    if (err) {
+      res.status(403).json({ error: 'CORS error', message: err.message });
+      return;
+    }
+    next();
+  });
+});
 // Increase body size limits to accommodate larger payloads (e.g. temporary base64 images).
 // Prefer uploading files via `/api/uploads` (multipart/form-data) instead of embedding large base64 in JSON.
 app.use(express.json({ limit: process.env.EXPRESS_JSON_LIMIT || '10mb' }));
