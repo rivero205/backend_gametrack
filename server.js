@@ -51,10 +51,15 @@ try {
 }
 app.use('/assets/portadas', express.static(uploadsDir));
 
-// Routes
-// Proteger juegos y reseñas con autenticación
-// NOTE: mount RAWG sync routes BEFORE the games router so specific endpoints
-// like /api/games/test-rawg are not captured by the generic /:id route
+
+// Ruta principal de bienvenida
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Bienvenido a GameTrack Revolution API',
+    status: 'OK',
+    docs: 'Consulta el README o /api para ver los endpoints disponibles.'
+  });
+});
 
 // Endpoint público para juegos importados (sin autenticación)
 app.get('/api/games/importados', listImportedGames);
