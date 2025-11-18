@@ -1,0 +1,35 @@
+{
+  "name": "gametracker-backend",
+  "version": "0.1.0",
+  "description": "Backend API for GameTracker - Node + Express + MongoDB (ESM)",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate:hours": "node ./scripts/migrate-hours.js",
+    "migrate:usergames": "node ./scripts/migrate-usergames.js"
+    ,
+    "cleanup:legacy": "node ./scripts/cleanup-legacy.js"
+    ,
+    "dedupe:imported": "node ./scripts/dedupe-imported-games.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+  "multer": "^1.4.5-lts.1",
+    "express-validator": "^7.3.0",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

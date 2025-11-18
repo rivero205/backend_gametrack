@@ -1,0 +1,14 @@
+# Ignore environment files with secrets
+.env
+.env.local
+.env.*.local
+node_modules/
+.env
+dist/
+coverage/
+npm-debug.log
+yarn-error.log
+
+# Uploaded cover images (do not commit user uploads)
+/public/assets/portadas/
+/public/assets/portadas/**

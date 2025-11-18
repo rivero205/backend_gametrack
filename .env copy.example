@@ -1,0 +1,29 @@
+# Backend example environment variables
+# Copy this file to `.env` and fill real values before starting the server.
+
+# Secret used to sign JWTs. MUST be set in production and should be a strong random string.
+JWT_SECRET=your_strong_jwt_secret_here
+
+# Origin allowed for CORS (frontend). Example for local Vite dev:
+CLIENT_ORIGIN=http://localhost:5173
+
+# JWT token expiration used by jwt.sign. Examples: 7d, 24h, 30m
+JWT_EXPIRES_IN=7d
+
+# Cookie sameSite value. Defaults to 'strict' in production and 'lax' in development.
+# Allowed values: 'strict', 'lax', 'none'
+COOKIE_SAME_SITE=
+# MongoDB connection URI (replace with your credentials)
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.abcdefg.mongodb.net/myFirstDatabase
+PORT=5000
+JWT_SECRET=dev_secret_change_me
+JWT_EXPIRES_IN=7d
+
+# Database name
+MONGO_DB=gametrack
+
+# Server port
+PORT=5000
+
+# Environment
+NODE_ENV=development
